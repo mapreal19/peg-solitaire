@@ -26,7 +26,7 @@ class PegSolitaire
   ].freeze
 
   def initialize
-
+    @solution_found = false
   end
 
   def call
@@ -40,9 +40,11 @@ class PegSolitaire
   private
 
   def backtracking(matrix, solution, pegs_count, movements)
+    return if @solution_found
     if pegs_count == 1
       show_solution(solution.compact, movements.compact)
-      exit
+      @solution_found = true
+      # exit
     end
 
     (0..6).to_a.each do |i|
@@ -256,4 +258,4 @@ class PegSolitaire
   end
 end
 
-PegSolitaire.new.call
+# PegSolitaire.new.call
