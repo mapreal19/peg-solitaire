@@ -1,5 +1,3 @@
-require "pry"
-
 class PegSolitaire
   PEG_PRESENT = 1
   PEG_MISSING = 0
@@ -41,11 +39,7 @@ class PegSolitaire
 
   def backtracking(matrix, solution, pegs_count, movements)
     return if @solution_found
-    if pegs_count == 1
-      show_solution(solution.compact, movements.compact)
-      @solution_found = true
-      # exit
-    end
+    show_solution(solution.compact, movements.compact) if pegs_count == 1
 
     (0..6).to_a.each do |i|
       (0..6).to_a.each do |j|
@@ -227,6 +221,7 @@ class PegSolitaire
   end
 
   def show_solution(solution, movements)
+    @solution_found = true
     puts 'Solution found! -->'
     solution.reverse.each_with_index do |position, index|
       puts "Position: [#{position[0]}, #{position[1]}], Movement: #{movements.reverse[index]}"
@@ -257,5 +252,3 @@ class PegSolitaire
     Array.new(7) { PEG_PRESENT }
   end
 end
-
-# PegSolitaire.new.call
