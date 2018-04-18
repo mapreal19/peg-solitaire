@@ -56,7 +56,6 @@ class PegSolitaire
     @pegs_board[i][j] = PEG_PRESENT
     @pegs_board[check_i1][check_j1] = PEG_PRESENT
     @pegs_board[checki2][checkj2] = PEG_MISSING
-    @solution[@pegs_count - 1] = [-1, -1]
     @pegs_count += 1
   end
 
