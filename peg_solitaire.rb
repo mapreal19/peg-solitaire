@@ -26,141 +26,141 @@ class PegSolitaire
   def initialize
     @solution_found = false
     @pegs_count = 32
+    @pegs_board = build_pegs_board
   end
 
   def call
-    pegs_matrix = build_pegs_matrix
     solution = []
     movements = []
 
-    backtracking(pegs_matrix, solution, movements)
+    backtracking(solution, movements)
   end
 
   private
 
-  def backtracking(matrix, solution, movements)
+  def backtracking(solution, movements)
     return if @solution_found
     show_solution(solution.compact, movements.compact) if @pegs_count == 1
 
     (0..6).to_a.each do |i|
       (0..6).to_a.each do |j|
-        if matrix[i][j] == 1
-          if can_move_diagonal_right_down?(matrix, i, j)
-            matrix[i][j] = PEG_MISSING
-            matrix[i + 1][j + 1] = PEG_MISSING
-            matrix[i + 2][j + 2] = PEG_PRESENT
+        if @pegs_board[i][j] == 1
+          if can_move_diagonal_right_down?(i, j)
+            @pegs_board[i][j] = PEG_MISSING
+            @pegs_board[i + 1][j + 1] = PEG_MISSING
+            @pegs_board[i + 2][j + 2] = PEG_PRESENT
             solution[@pegs_count - 1] = [i, j]
             movements[@pegs_count - 1] = '↘'
             @pegs_count -= 1
-            backtracking(matrix, solution, movements)
-            matrix[i][j] = PEG_PRESENT
-            matrix[i + 1][j + 1] = PEG_PRESENT
-            matrix[i + 2][j + 2] = PEG_MISSING
+            backtracking(solution, movements)
+            @pegs_board[i][j] = PEG_PRESENT
+            @pegs_board[i + 1][j + 1] = PEG_PRESENT
+            @pegs_board[i + 2][j + 2] = PEG_MISSING
             solution[@pegs_count - 1] = [-1, -1]
             @pegs_count += 1
           end
 
-          if can_move_right?(matrix, i, j)
-            matrix[i][j] = PEG_MISSING
-            matrix[i][j + 1] = PEG_MISSING
-            matrix[i][j + 2] = PEG_PRESENT
+          if can_move_right?(i, j)
+            @pegs_board[i][j] = PEG_MISSING
+            @pegs_board[i][j + 1] = PEG_MISSING
+            @pegs_board[i][j + 2] = PEG_PRESENT
             solution[@pegs_count - 1] = [i, j]
             movements[@pegs_count - 1] = '→'
             @pegs_count -= 1
-            backtracking(matrix, solution, movements)
-            matrix[i][j] = PEG_PRESENT
-            matrix[i][j + 1] = PEG_PRESENT
-            matrix[i][j + 2] = PEG_MISSING
+            backtracking(solution, movements)
+            @pegs_board[i][j] = PEG_PRESENT
+            @pegs_board[i][j + 1] = PEG_PRESENT
+            @pegs_board[i][j + 2] = PEG_MISSING
             solution[@pegs_count - 1] = [-1, -1]
             @pegs_count += 1
           end
 
-          if can_move_diagonal_left_up?(matrix, i, j)
-            matrix[i][j] = PEG_MISSING
-            matrix[i - 1][j - 1] = PEG_MISSING
-            matrix[i - 2][j - 2] = PEG_PRESENT
+          if can_move_diagonal_left_up?(i, j)
+            @pegs_board[i][j] = PEG_MISSING
+            @pegs_board[i - 1][j - 1] = PEG_MISSING
+            @pegs_board[i - 2][j - 2] = PEG_PRESENT
             solution[@pegs_count - 1] = [i, j]
             movements[@pegs_count - 1] = '↖'
             @pegs_count -= 1
-            backtracking(matrix, solution, movements)
-            matrix[i][j] = PEG_PRESENT
-            matrix[i - 1][j - 1] = PEG_PRESENT
-            matrix[i - 2][j - 2] = PEG_MISSING
+            backtracking(solution, movements)
+            @pegs_board[i][j] = PEG_PRESENT
+            @pegs_board[i - 1][j - 1] = PEG_PRESENT
+            @pegs_board[i - 2][j - 2] = PEG_MISSING
             solution[@pegs_count - 1] = [-1, -1]
             @pegs_count += 1
           end
 
-          if can_move_up?(matrix, i, j)
-            matrix[i][j] = PEG_MISSING
-            matrix[i - 1][j] = PEG_MISSING
-            matrix[i - 2][j] = PEG_PRESENT
+          if can_move_up?(i, j)
+            @pegs_board[i][j] = PEG_MISSING
+            @pegs_board[i - 1][j] = PEG_MISSING
+            @pegs_board[i - 2][j] = PEG_PRESENT
             solution[@pegs_count - 1] = [i, j]
             movements[@pegs_count - 1] = '↑'
             @pegs_count -= 1
-            backtracking(matrix, solution, movements)
-            matrix[i][j] = PEG_PRESENT
-            matrix[i - 1][j] = PEG_PRESENT
-            matrix[i - 2][j] = PEG_MISSING
+            backtracking(solution, movements)
+            @pegs_board[i][j] = PEG_PRESENT
+            @pegs_board[i - 1][j] = PEG_PRESENT
+            @pegs_board[i - 2][j] = PEG_MISSING
             solution[@pegs_count - 1] = [-1, -1]
             @pegs_count += 1
           end
 
-          if can_move_diagonal_right_up?(matrix, i, j)
-            matrix[i][j] = PEG_MISSING
-            matrix[i - 1][j + 1] = PEG_MISSING
-            matrix[i - 2][j + 2] = PEG_PRESENT
+          if can_move_diagonal_right_up?(i, j)
+            @pegs_board[i][j] = PEG_MISSING
+            @pegs_board[i - 1][j + 1] = PEG_MISSING
+            @pegs_board[i - 2][j + 2] = PEG_PRESENT
             solution[@pegs_count - 1] = [i, j]
             movements[@pegs_count - 1] = '↗'
             @pegs_count -= 1
-            backtracking(matrix, solution, movements)
-            matrix[i][j] = PEG_PRESENT
-            matrix[i - 1][j + 1] = PEG_PRESENT
-            matrix[i - 2][j + 2] = PEG_MISSING
+            backtracking(solution, movements)
+            @pegs_board[i][j] = PEG_PRESENT
+            @pegs_board[i - 1][j + 1] = PEG_PRESENT
+            @pegs_board[i - 2][j + 2] = PEG_MISSING
             solution[@pegs_count - 1] = [-1, -1]
             @pegs_count += 1
           end
 
-          if can_move_down?(matrix, i, j)
-            matrix[i][j] = PEG_MISSING
-            matrix[i + 1][j] = PEG_MISSING
-            matrix[i + 2][j] = PEG_PRESENT
+          if can_move_down?(i, j)
+            @pegs_board[i][j] = PEG_MISSING
+            @pegs_board[i + 1][j] = PEG_MISSING
+            @pegs_board[i + 2][j] = PEG_PRESENT
             solution[@pegs_count - 1] = [i, j]
             movements[@pegs_count - 1] = '↓'
             @pegs_count -= 1
-            backtracking(matrix, solution, movements)
-            matrix[i][j] = PEG_PRESENT
-            matrix[i + 1][j] = PEG_PRESENT
-            matrix[i + 2][j] = PEG_MISSING
+            backtracking(solution, movements)
+            @pegs_board[i][j] = PEG_PRESENT
+            @pegs_board[i + 1][j] = PEG_PRESENT
+            @pegs_board[i + 2][j] = PEG_MISSING
             solution[@pegs_count - 1] = [-1, -1]
             @pegs_count += 1
           end
 
-          if can_move_left?(matrix, i, j)
-            matrix[i][j] = PEG_MISSING
-            matrix[i][j - 1] = PEG_MISSING
-            matrix[i][j - 2] = PEG_PRESENT
+          if can_move_left?(i, j)
+            @pegs_board[i][j] = PEG_MISSING
+            @pegs_board[i][j - 1] = PEG_MISSING
+            @pegs_board[i][j - 2] = PEG_PRESENT
             solution[@pegs_count - 1] = [i, j]
             movements[@pegs_count - 1] = '←'
             @pegs_count -= 1
-            backtracking(matrix, solution, movements)
-            matrix[i][j] = PEG_PRESENT
-            matrix[i][j - 1] = PEG_PRESENT
-            matrix[i][j - 2] = PEG_MISSING
+            backtracking(solution, movements)
+            @pegs_board[i][j] = PEG_PRESENT
+            @pegs_board[i][j - 1] = PEG_PRESENT
+            @pegs_board[i][j - 2] = PEG_MISSING
             solution[@pegs_count - 1] = [-1, -1]
             @pegs_count += 1
           end
 
-          if can_move_diagonal_left_down?(matrix, i, j)
-            matrix[i][j] = PEG_MISSING
-            matrix[i + 1][j - 1] = PEG_MISSING
-            matrix[i + 2][j - 2] = PEG_PRESENT
+          if can_move_diagonal_left_down?(i, j)
+            @pegs_board[i][j] = PEG_MISSING
+            @pegs_board[i + 1][j - 1] = PEG_MISSING
+            @pegs_board[i + 2][j - 2] = PEG_PRESENT
             solution[@pegs_count - 1] = [i, j]
             movements[@pegs_count - 1] = '↙'
             @pegs_count -= 1
-            backtracking(matrix, solution, movements)
-            matrix[i][j] = PEG_PRESENT
-            matrix[i + 1][j - 1] = PEG_PRESENT
-            matrix[i + 2][j - 2] = PEG_MISSING
+            backtracking(solution, movements)
+            @pegs_board[i][j] = PEG_PRESENT
+            @pegs_board[i + 1][j - 1] = PEG_PRESENT
+            @pegs_board[i + 2][j - 2] = PEG_MISSING
             solution[@pegs_count - 1] = [-1, -1]
             @pegs_count += 1
           end
@@ -169,56 +169,56 @@ class PegSolitaire
     end
   end
 
-  def can_move_diagonal_right_up?(matrix, i, j)
+  def can_move_diagonal_right_up?(i, j)
     i - 2 > 0 &&
       j + 2 < 7 &&
-      matrix[i - 1][j + 1] == PEG_PRESENT &&
-      matrix[i - 2][j + 2] == PEG_MISSING
+      @pegs_board[i - 1][j + 1] == PEG_PRESENT &&
+      @pegs_board[i - 2][j + 2] == PEG_MISSING
   end
 
-  def can_move_diagonal_left_up?(matrix, i, j)
+  def can_move_diagonal_left_up?(i, j)
     i - 2 > 0 &&
       j - 2 > 0 &&
-      matrix[i - 1][j - 1] == PEG_PRESENT &&
-      matrix[i - 2][j - 2] == PEG_MISSING
+      @pegs_board[i - 1][j - 1] == PEG_PRESENT &&
+      @pegs_board[i - 2][j - 2] == PEG_MISSING
   end
 
-  def can_move_diagonal_left_down?(matrix, i, j)
+  def can_move_diagonal_left_down?(i, j)
     i + 2 < 7 &&
       j - 2 > 0 &&
-      matrix[i + 1][j - 1] == PEG_PRESENT &&
-      matrix[i + 2][j - 2] == PEG_MISSING
+      @pegs_board[i + 1][j - 1] == PEG_PRESENT &&
+      @pegs_board[i + 2][j - 2] == PEG_MISSING
   end
 
-  def can_move_diagonal_right_down?(matrix, i, j)
+  def can_move_diagonal_right_down?(i, j)
     i + 2 < 7 &&
       j + 2 < 7 &&
-      matrix[i + 1][j + 1] == PEG_PRESENT &&
-      matrix[i + 2][j + 2] == PEG_MISSING
+      @pegs_board[i + 1][j + 1] == PEG_PRESENT &&
+      @pegs_board[i + 2][j + 2] == PEG_MISSING
   end
 
-  def can_move_up?(matrix, i, j)
+  def can_move_up?(i, j)
     i - 2 > 0 &&
-      matrix[i - 1][j] == PEG_PRESENT &&
-      matrix[i - 2][j] == PEG_MISSING
+      @pegs_board[i - 1][j] == PEG_PRESENT &&
+      @pegs_board[i - 2][j] == PEG_MISSING
   end
 
-  def can_move_right?(matrix, i, j)
+  def can_move_right?(i, j)
     j + 2 < 7 &&
-      matrix[i][j + 1] == PEG_PRESENT &&
-      matrix[i][j + 2] == PEG_MISSING
+      @pegs_board[i][j + 1] == PEG_PRESENT &&
+      @pegs_board[i][j + 2] == PEG_MISSING
   end
 
-  def can_move_down?(matrix, i, j)
+  def can_move_down?(i, j)
     i + 2 < 7 &&
-      matrix[i + 1][j] == PEG_PRESENT &&
-      matrix[i + 2][j] == PEG_MISSING
+      @pegs_board[i + 1][j] == PEG_PRESENT &&
+      @pegs_board[i + 2][j] == PEG_MISSING
   end
 
-  def can_move_left?(matrix, i, j)
+  def can_move_left?(i, j)
     j - 2 > 0 &&
-      matrix[i][j - 1] == PEG_PRESENT &&
-      matrix[i][j - 2] == PEG_MISSING
+      @pegs_board[i][j - 1] == PEG_PRESENT &&
+      @pegs_board[i][j - 2] == PEG_MISSING
   end
 
   def show_solution(solution, movements)
@@ -229,8 +229,8 @@ class PegSolitaire
     end
   end
 
-  def build_pegs_matrix
-    pegs_matrix = [
+  def build_pegs_board
+    pegs_board = [
       build_row,
       build_row,
       build_row,
@@ -241,12 +241,12 @@ class PegSolitaire
     ]
 
     OUT_OF_BOARD_POSITIONS.each do |position|
-      pegs_matrix[position[0]][position[1]] = PEG_OUTSIDE_BOARD
+      pegs_board[position[0]][position[1]] = PEG_OUTSIDE_BOARD
     end
 
-    pegs_matrix[INIT_POSITION[0]][INIT_POSITION[1]] = PEG_MISSING
+    pegs_board[INIT_POSITION[0]][INIT_POSITION[1]] = PEG_MISSING
 
-    pegs_matrix
+    pegs_board
   end
 
   def build_row
