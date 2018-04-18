@@ -117,8 +117,8 @@ class PegSolitaire
             pegs_count -= 1
             backtracking(matrix, solution, pegs_count, movements)
             matrix[i][j] = PEG_PRESENT
-            matrix[i - 1][j] = PEG_PRESENT
-            matrix[i - 2][j] = PEG_MISSING
+            matrix[i - 1][j + 1] = PEG_PRESENT
+            matrix[i - 2][j + 2] = PEG_MISSING
             solution[pegs_count - 1] = [-1, -1]
             pegs_count += 1
           end
