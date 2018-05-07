@@ -3,6 +3,9 @@ class PegSolitaire
   PEG_MISSING = 0
   PEG_OUTSIDE_BOARD = -1
 
+  COLS = 7
+  ROWS = 7
+
   INIT_POSITION = [3, 3].freeze
   OUT_OF_BOARD_POSITIONS = [
     [0, 0],
@@ -37,25 +40,25 @@ class PegSolitaire
 
   private
 
-  def move(i, j, check_i1, check_j1, checki2, checkj2, movement)
-    do_move(i, j, check_i1, check_j1, checki2, checkj2, movement)
+  def move(i, j, check_i1, check_j1, check_i2, check_j2, movement)
+    do_move(i, j, check_i1, check_j1, check_i2, check_j2, movement)
     backtracking
-    undo_move(i, j, check_i1, check_j1, checki2, checkj2)
+    undo_move(i, j, check_i1, check_j1, check_i2, check_j2)
   end
 
-  def do_move(i, j, check_i1, check_j1, checki2, checkj2, movement)
+  def do_move(i, j, check_i1, check_j1, check_i2, check_j2, movement)
     @pegs_board[i][j] = PEG_MISSING
     @pegs_board[check_i1][check_j1] = PEG_MISSING
-    @pegs_board[checki2][checkj2] = PEG_PRESENT
+    @pegs_board[check_i2][check_j2] = PEG_PRESENT
     @solution[@pegs_count - 1] = [i, j]
     @movements[@pegs_count - 1] = movement
     @pegs_count -= 1
   end
 
-  def undo_move(i, j, check_i1, check_j1, checki2, checkj2)
+  def undo_move(i, j, check_i1, check_j1, check_i2, check_j2)
     @pegs_board[i][j] = PEG_PRESENT
     @pegs_board[check_i1][check_j1] = PEG_PRESENT
-    @pegs_board[checki2][checkj2] = PEG_MISSING
+    @pegs_board[check_i2][check_j2] = PEG_MISSING
     @pegs_count += 1
   end
 
@@ -65,38 +68,38 @@ class PegSolitaire
 
     (0..6).to_a.each do |i|
       (0..6).to_a.each do |j|
-        if @pegs_board[i][j] == 1
-          if can_move_diagonal_right_down?(i, j)
-            move(i, j, i + 1, j + 1, i + 2, j + 2, '↘')
-          end
+        next unless @pegs_board[i][j] == 1
 
-          if can_move_right?(i, j)
-            move(i, j, i, j + 1, i, j + 2, '→')
-          end
+        if can_move_diagonal_right_down?(i, j)
+          move(i, j, i + 1, j + 1, i + 2, j + 2, '↘')
+        end
 
-          if can_move_diagonal_left_up?(i, j)
-            move(i, j, i - 1, j - 1, i - 2, j - 2, '↖')
-          end
+        if can_move_right?(i, j)
+          move(i, j, i, j + 1, i, j + 2, '→')
+        end
 
-          if can_move_up?(i, j)
-            move(i, j, i - 1, j, i - 2, j, '↑')
-          end
+        if can_move_diagonal_left_up?(i, j)
+          move(i, j, i - 1, j - 1, i - 2, j - 2, '↖')
+        end
 
-          if can_move_diagonal_right_up?(i, j)
-            move(i, j, i - 1, j + 1, i - 2, j + 2, '↗')
-          end
+        if can_move_up?(i, j)
+          move(i, j, i - 1, j, i - 2, j, '↑')
+        end
 
-          if can_move_down?(i, j)
-            move(i, j, i + 1, j, i + 2, j, '↓')
-          end
+        if can_move_diagonal_right_up?(i, j)
+          move(i, j, i - 1, j + 1, i - 2, j + 2, '↗')
+        end
 
-          if can_move_left?(i, j)
-            move(i, j, i, j - 1, i, j - 2, '←')
-          end
+        if can_move_down?(i, j)
+          move(i, j, i + 1, j, i + 2, j, '↓')
+        end
 
-          if can_move_diagonal_left_down?(i, j)
-            move(i, j, i + 1, j - 1, i + 2, j - 2, '↙')
-          end
+        if can_move_left?(i, j)
+          move(i, j, i, j - 1, i, j - 2, '←')
+        end
+
+        if can_move_diagonal_left_down?(i, j)
+          move(i, j, i + 1, j - 1, i + 2, j - 2, '↙')
         end
       end
     end
@@ -163,15 +166,7 @@ class PegSolitaire
   end
 
   def build_pegs_board
-    pegs_board = [
-      build_row,
-      build_row,
-      build_row,
-      build_row,
-      build_row,
-      build_row,
-      build_row
-    ]
+    pegs_board = Array.new(ROWS) { build_row }
 
     OUT_OF_BOARD_POSITIONS.each do |position|
       pegs_board[position[0]][position[1]] = PEG_OUTSIDE_BOARD
@@ -183,6 +178,6 @@ class PegSolitaire
   end
 
   def build_row
-    Array.new(7) { PEG_PRESENT }
+    Array.new(COLS) { PEG_PRESENT }
   end
 end
